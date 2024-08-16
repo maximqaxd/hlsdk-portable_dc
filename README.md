@@ -10,4 +10,4 @@ server:\
 Inside the prompt navigate to the hlsdk directory, using cd command, e.g.\
 cd C:\Users\username\projects\hlsdk-portable_dc\dlls \
 type make\
-libhl.a and libcl_dll.a will appear in corresponding folders\
+libhl.a and libcl_dll.a will appear in corresponding folders
