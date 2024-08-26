@@ -1920,6 +1920,7 @@ void CHudSpectator::Reset()
 	if( strcmp( m_OverviewData.map, gEngfuncs.pfnGetLevelName() ) )
 	{
 		// update level overview if level changed
+		
 		ParseOverviewFile();
 		LoadMapSprites();
 	}

@@ -36,7 +36,7 @@ float CL_KeyState( kbutton_t *key );
 extern "C"
 {
 	void DLLEXPORT CAM_Think( void );
-	int DLLEXPORT CL__IsThirdPerson( void );
+	int DLLEXPORT CL_IsThirdPerson( void );
 	void DLLEXPORT CL_CameraOffset( float *ofs );
 }
 
@@ -169,7 +169,7 @@ void DLLEXPORT CAM_Think( void )
 #endif
 	vec3_t viewangles;
 
-	if( gEngfuncs.GetMaxClients() > 1 && CL__IsThirdPerson() )
+	if( gEngfuncs.GetMaxClients() > 1 && CL_IsThirdPerson() )
 		CAM_ToFirstPerson();
 
 	switch( (int)cam_command->value )
@@ -659,7 +659,7 @@ void CAM_EndDistance( void )
 	iMouseInUse = 0;
 }
 
-int DLLEXPORT CL__IsThirdPerson( void )
+int DLLEXPORT CL_IsThirdPerson( void )
 {
 	return ( cam_thirdperson ? 1 : 0 ) || ( g_iUser1 && ( g_iUser2 == gEngfuncs.GetLocalPlayer()->index ) );
 }

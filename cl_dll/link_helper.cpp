@@ -46,7 +46,7 @@ void DLLEXPORT Demo_ReadBuffer( int size, unsigned char *buffer );
 void DLLEXPORT CL_CreateMove( float frametime, struct usercmd_s *cmd, int active );
 struct kbutton_s DLLEXPORT *KB_Find( const char *name );
 void DLLEXPORT CAM_Think( void );
-int DLLEXPORT CL__IsThirdPerson( void );
+int DLLEXPORT CL_IsThirdPerson( void );
 void DLLEXPORT CL_CameraOffset( float *ofs );
 void DLLEXPORT IN_ClientMoveEvent( float forwardmove, float sidemove );
 void DLLEXPORT IN_ClientLookEvent( float relyaw, float relpitch );
@@ -92,7 +92,7 @@ struct {const char *name;void *func;} lib_cl_dll_exports[] =
 	{ "HUD_GetUserEntity", &HUD_GetUserEntity },
 	{ "Demo_ReadBuffer", &Demo_ReadBuffer },
 	{ "CAM_Think", &CAM_Think },
-	{ "CL__IsThirdPerson", &CL__IsThirdPerson },
+	{ "CL_IsThirdPerson", &CL_IsThirdPerson },
 	{ "CL_CameraOffset", &CL_CameraOffset },
 	{ "CL_CreateMove", &CL_CreateMove },
 	{ "IN__ActivateMouse", &IN__ActivateMouse },

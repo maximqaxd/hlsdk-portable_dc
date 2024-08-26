@@ -39,7 +39,7 @@ extern "C"
 
 extern "C" 
 {
-	int CL__IsThirdPerson( void );
+	int CL_IsThirdPerson( void );
 	void CL_CameraOffset( float *ofs );
 
 	void DLLEXPORT V_CalcRefdef( struct ref_params_s *pparams );
@@ -550,7 +550,7 @@ void V_CalcNormalRefdef( struct ref_params_s *pparams )
 	}
 
 	// Treating cam_ofs[2] as the distance
-	if( CL__IsThirdPerson() )
+	if( CL_IsThirdPerson() )
 	{
 		vec3_t ofs;
 
@@ -729,7 +729,7 @@ void V_CalcNormalRefdef( struct ref_params_s *pparams )
 	v_client_aimangles = pparams->cl_viewangles;
 	v_lastAngles = pparams->viewangles;
 	//v_cl_angles = pparams->cl_viewangles;	// keep old user mouse angles !
-	if( CL__IsThirdPerson() )
+	if( CL_IsThirdPerson() )
 	{
 		VectorCopy( camAngles, pparams->viewangles );
 	}
