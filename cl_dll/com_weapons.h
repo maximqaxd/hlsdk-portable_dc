@@ -35,7 +35,7 @@ unsigned short	stub_PrecacheEvent( int type, const char *s );
 const char		*stub_NameForFunction( void *function );
 void			stub_SetModel( struct edict_s *e, const char *m );
 
-extern cvar_t *cl_lw;
+extern cvar_t *cl_lw_client;
 
 extern int g_runfuncs;
 extern vec3_t v_angles;

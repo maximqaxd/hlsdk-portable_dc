@@ -1,8 +1,8 @@
 TARGET = libhl.a
 DEFINES = -D_KOS_ -D_SH4_ -Dstricmp=strcasecmp -Dstrnicmp=strncasecmp -D_snprintf=snprintf  -DNO_VOICEGAMEMGR 
 INCLUDES = -I. -I../common -I../engine -I../pm_shared -I../game_shared -I../public
-KOS_CFLAGS = $(INCLUDES) $(DEFINES) -nostartfiles -Ofast -Wl,-q -Wfatal-errors -Wno-write-strings -fsigned-char -fno-short-enums -fno-lto
-KOS_CPPFLAGS =  $(KOS_CFLAGS) -fno-exceptions -fpermissive
+KOS_CFLAGS +=  $(INCLUDES) $(DEFINES) -Os -fomit-frame-pointer -ffunction-sections -fno-asynchronous-unwind-tables
+KOS_CPPFLAGS += $(INCLUDES) $(DEFINES) -fno-exceptions -std=gnu++11 -fpermissive -MMD -MP  $(CFLAGS)
 OBJS = agrunt.o \
 	airtank.o \
 	aflock.o \

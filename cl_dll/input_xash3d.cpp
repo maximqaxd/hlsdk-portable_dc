@@ -16,8 +16,8 @@ extern kbutton_t	in_back;
 extern kbutton_t	in_moveleft;
 extern kbutton_t	in_moveright;
 
-extern cvar_t	*m_pitch;
-extern cvar_t	*m_yaw;
+extern cvar_t	*m_pitch_client;
+extern cvar_t	*m_yaw_client;
 extern cvar_t	*m_forward;
 extern cvar_t	*m_side;
 extern cvar_t	*lookstrafe;

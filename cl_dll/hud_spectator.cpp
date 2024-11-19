@@ -344,18 +344,21 @@ int UTIL_FindEntityInMap( const char *name, float *origin, float *angle )
 
 				angle[2] = 0.0f;
 			}
-			#if !XASH_DREAMCAST
+			
 			if( !strcmp( keyname, "angles" ) )
 			{	
-				
+				#if !XASH_DREAMCAST
 				UTIL_StringToVector( angle, token );
+				#endif
 			}
 
 			if( !strcmp( keyname, "origin" ) )
 			{
+				#if !XASH_DREAMCAST
 				UTIL_StringToVector( origin, token );
+				#endif
 			}
-			#endif
+			
 		} // while (1)
 
 		if( found )
@@ -1920,8 +1923,9 @@ void CHudSpectator::Reset()
 	if( strcmp( m_OverviewData.map, gEngfuncs.pfnGetLevelName() ) )
 	{
 		// update level overview if level changed
-		
+		#if !XASH_DREAMCAST
 		ParseOverviewFile();
+		#endif
 		LoadMapSprites();
 	}
 
