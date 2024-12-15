@@ -150,7 +150,7 @@ HUD_SetMaxSpeed
 void HUD_SetMaxSpeed( const edict_t *ed, float speed )
 {
 }
-#if !XASH_DREAMCAST
+#ifdef CLIENT_WEAPONS
 /*
 =====================
 UTIL_WeaponTimeBase

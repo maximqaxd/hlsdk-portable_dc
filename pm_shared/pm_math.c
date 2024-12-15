@@ -34,7 +34,7 @@
 vec3_t vec3_origin_pm = { 0, 0, 0 };
 int nanmask = 255 << 23;
 
-float anglemod_pm( float a )
+float anglemod_PM( float a )
 {
 	a = ( 360.0f / 65536.0f ) * ( (int)( a * ( 65536.0f / 360.0f ) ) & 65535 );
 	return a;

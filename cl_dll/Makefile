@@ -1,9 +1,25 @@
 TARGET = libcl_dll.a
-DEFINES = -D_KOS_ -D_SH4_ -DCLIENT_DLL -Dstricmp=strcasecmp -Dstrnicmp=strncasecmp -D_snprintf=snprintf  -DNO_VOICEGAMEMGR 
-INCLUDES = -I. -I../common -I../engine -I../pm_shared -I../game_shared -I../public -I../external -I../dlls -I../utils/fake_vgui/include
-KOS_CFLAGS +=  $(INCLUDES) $(DEFINES) -Os -fomit-frame-pointer -ffunction-sections -fno-asynchronous-unwind-tables
-KOS_CPPFLAGS += $(INCLUDES) $(DEFINES) -fno-exceptions -std=gnu++11 -fpermissive -MMD -MP  $(CFLAGS)
-OBJS = ev_hldm.o \
+DEFINES = -D_KOS_ -D_SH4_ -DCLIENT_DLL -DCLIENT_WEAPONS -Dstricmp=strcasecmp -Dstrnicmp=strncasecmp -D_snprintf=snprintf  -DNO_VOICEGAMEMGR 
+INCLUDES = -I. -I../common -I../engine -I../pm_shared -I../game_shared -I../public -I../external -I../dlls -I../utils/fake_vgui/include 
+KOS_CFLAGS +=  $(INCLUDES) $(DEFINES) -Oz -fno-omit-frame-pointer -ffunction-sections -fno-asynchronous-unwind-tables
+KOS_CPPFLAGS += $(INCLUDES) $(DEFINES) -fno-exceptions -std=gnu++11 -fpermissive -MMD -MP  $(KOS_CFLAGS)
+OBJS = \
+	../dlls/crossbow.o \
+	../dlls/crowbar.o \
+	../dlls/egon.o \
+	../dlls/gauss.o \
+	../dlls/handgrenade.o \
+	../dlls/hornetgun.o \
+	../dlls/mp5.o \
+	../dlls/python.o \
+	../dlls/rpg.o \
+	../dlls/satchel.o \
+	../dlls/shotgun.o \
+	../dlls/squeakgrenade.o \
+	../dlls/tripmine.o \
+	../dlls/glock.o \
+	ev_hldm.o \
+	hl/hl_baseentity.o \
 	hl/hl_events.o \
 	hl/hl_objects.o \
 	hl/hl_weapons.o \
@@ -49,6 +65,9 @@ OBJS = ev_hldm.o \
 	scoreboard.o \
 	MOTD.o \
 	../game_shared/vcs_info.o \
+	../pm_shared/pm_debug.o \
+	../pm_shared/pm_math.o \
+	../pm_shared/pm_shared.o \
 	link_helper.o 
 	
 include ${KOS_PORTS}/scripts/lib.mk

@@ -56,7 +56,6 @@ void DLLEXPORT IN__ActivateMouse( void );
 void DLLEXPORT IN__DeactivateMouse( void );
 void DLLEXPORT IN_Accumulate( void );
 void DLLEXPORT V_CalcRefdef( struct ref_params_s *pparams );
-int		iJumpSpectator;
 
 
 
@@ -107,7 +106,7 @@ struct {const char *name;void *func;} lib_cl_dll_exports[] =
 	{ "HUD_VoiceStatus", &HUD_VoiceStatus },
 	{ "IN_ClientMoveEvent", &IN_ClientMoveEvent}, // Xash3D ext
 	{ "IN_ClientLookEvent", &IN_ClientLookEvent}, // Xash3D ext
-	{ "iJumpSpectator", &iJumpSpectator },
+	//{ "iJumpSpectator", &iJumpSpectator },
 	{ 0, 0 },
 };
 

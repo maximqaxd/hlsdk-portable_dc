@@ -128,7 +128,7 @@ void HUD_PrepEntity( CBaseEntity *pEntity, CBasePlayer *pWeaponOwner )
 		g_pWpns[info.iId] = (CBasePlayerWeapon *)pEntity;
 	}
 }
-#if !XASH_DREAMCAST
+#ifdef CLIENT_WEAPONS
 /*
 =====================
 CBaseEntity::Killed
@@ -1036,7 +1036,7 @@ void _DLLEXPORT HUD_PostRunCmd( struct local_state_s *from, struct local_state_s
 	g_runfuncs = runfuncs;
 
 #if CLIENT_WEAPONS
-	if( cl_lw && cl_lw->value )
+	if( cl_lw_client && cl_lw_client->value )
 	{
 		HUD_WeaponsPostThink( from, to, cmd, time, random_seed );
 	}
