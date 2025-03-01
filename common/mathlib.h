@@ -47,7 +47,7 @@ typedef vec_t vec3_t[3];
 
 struct mplane_s;
 
-extern vec3_t vec3_origin;
+extern vec3_t vec3_origin_pm;
 extern	int nanmask;
 
 #define	IS_NAN(x) (((*(int *)&x)&nanmask)==nanmask)
@@ -78,7 +78,7 @@ void VectorScale (const vec3_t in, vec_t scale, vec3_t out);
 void R_ConcatRotations (float in1[3][3], float in2[3][3], float out[3][3]);
 void R_ConcatTransforms (float in1[3][4], float in2[3][4], float out[3][4]);
 
-void AngleVectors (const vec3_t angles, vec3_t forward, vec3_t right, vec3_t up);
+void AngleVectors_PM (const vec3_t angles, vec3_t forward, vec3_t right, vec3_t up);
 void AngleVectorsTranspose (const vec3_t angles, vec3_t forward, vec3_t right, vec3_t up);
 #define AngleIVectors	AngleVectorsTranspose
 
@@ -96,7 +96,7 @@ void VectorAngles( const vec3_t forward, vec3_t angles );
 int InvertMatrix( const float * m, float *out );
 
 int BoxOnPlaneSide (vec3_t emins, vec3_t emaxs, struct mplane_s *plane);
-float	anglemod(float a);
+float	anglemod_PM(float a);
 
 #define BOX_ON_PLANE_SIDE(emins, emaxs, p)	\
 	(((p)->type < 3)?						\

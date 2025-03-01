@@ -296,7 +296,7 @@ void PM_ViewEntity( void )
 		return;
 #endif
 
-	AngleVectors (pmove->angles, forward, right, up);  // Determine movement angles
+	AngleVectors_PM (pmove->angles, forward, right, up);  // Determine movement angles
 
 	VectorCopy( pmove->origin, origin);
 

@@ -46,7 +46,7 @@ extern int g_weaponselect;
 extern cl_enginefunc_t gEngfuncs;
 
 // Defined in pm_math.c
-extern "C" float anglemod( float a );
+extern "C" float anglemod_PM( float a );
 
 void IN_Init( void );
 void IN_Move( float frametime, usercmd_t *cmd );
@@ -766,7 +766,7 @@ void CL_AdjustAngles( float frametime, float *viewangles )
 	{
 		viewangles[YAW] -= speed * cl_yawspeed->value * CL_KeyState( &in_right );
 		viewangles[YAW] += speed * cl_yawspeed->value * CL_KeyState( &in_left );
-		viewangles[YAW] = anglemod( viewangles[YAW] );
+		viewangles[YAW] = anglemod_PM( viewangles[YAW] );
 	}
 
 	if( in_klook.state & 1 )

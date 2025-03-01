@@ -963,7 +963,7 @@ void EV_FireGauss( event_args_t *args )
 				VectorMA( tr.endpos, 8.0, forward, vecSrc );
 				VectorMA( vecSrc, 8192.0, forward, vecDest );
 
-				gEngfuncs.pEfxAPI->R_TempSprite( tr.endpos, vec3_origin, 0.2, m_iGlow, kRenderGlow, kRenderFxNoDissipation, flDamage * n / 255.0f, flDamage * n * 0.5f * 0.1f, FTENT_FADEOUT );
+				gEngfuncs.pEfxAPI->R_TempSprite( tr.endpos, vec3_origin_pm, 0.2, m_iGlow, kRenderGlow, kRenderFxNoDissipation, flDamage * n / 255.0f, flDamage * n * 0.5f * 0.1f, FTENT_FADEOUT );
 
 				vec3_t fwd;
 				VectorAdd( tr.endpos, tr.plane.normal, fwd );
@@ -984,7 +984,7 @@ void EV_FireGauss( event_args_t *args )
 				// tunnel
 				EV_HLDM_DecalGunshot( &tr, BULLET_MONSTER_12MM );
 
-				gEngfuncs.pEfxAPI->R_TempSprite( tr.endpos, vec3_origin, 1.0, m_iGlow, kRenderGlow, kRenderFxNoDissipation, flDamage / 255.0f, 6.0f, FTENT_FADEOUT );
+				gEngfuncs.pEfxAPI->R_TempSprite( tr.endpos, vec3_origin_pm, 1.0, m_iGlow, kRenderGlow, kRenderFxNoDissipation, flDamage / 255.0f, 6.0f, FTENT_FADEOUT );
 
 				// limit it to one hole punch
 				if( fHasPunched )
@@ -1039,7 +1039,7 @@ void EV_FireGauss( event_args_t *args )
 
 							EV_HLDM_DecalGunshot( &beam_tr, BULLET_MONSTER_12MM );
 
-							gEngfuncs.pEfxAPI->R_TempSprite( beam_tr.endpos, vec3_origin, 0.1, m_iGlow, kRenderGlow, kRenderFxNoDissipation, flDamage / 255.0f, 6.0f, FTENT_FADEOUT );
+							gEngfuncs.pEfxAPI->R_TempSprite( beam_tr.endpos, vec3_origin_pm, 0.1, m_iGlow, kRenderGlow, kRenderFxNoDissipation, flDamage / 255.0f, 6.0f, FTENT_FADEOUT );
 
 							// balls
 							{
@@ -1065,7 +1065,7 @@ void EV_FireGauss( event_args_t *args )
 					{
 						// slug doesn't punch through ever with primary 
 						// fire, so leave a little glowy bit and make some balls
-						gEngfuncs.pEfxAPI->R_TempSprite( tr.endpos, vec3_origin, 0.2, m_iGlow, kRenderGlow, kRenderFxNoDissipation, 200.0f / 255.0f, 0.3, FTENT_FADEOUT );
+						gEngfuncs.pEfxAPI->R_TempSprite( tr.endpos, vec3_origin_pm, 0.2, m_iGlow, kRenderGlow, kRenderFxNoDissipation, 200.0f / 255.0f, 0.3, FTENT_FADEOUT );
 						{
 							vec3_t fwd;
 							VectorAdd( tr.endpos, tr.plane.normal, fwd );
@@ -1478,7 +1478,7 @@ void EV_EgonFire( event_args_t *args )
 			pBeam2 = gEngfuncs.pEfxAPI->R_BeamEntPoint( idx | 0x1000, tr.endpos, iBeamModelIndex, 99999, 5.0, 0.08, 0.7, 25, 0, 0, r, g, b );
 
 			// Vit_amiN: egon beam flare
-			pFlare = gEngfuncs.pEfxAPI->R_TempSprite( tr.endpos, vec3_origin, 1.0, gEngfuncs.pEventAPI->EV_FindModelIndex( EGON_FLARE_SPRITE ), kRenderGlow, kRenderFxNoDissipation, 1.0, 99999, FTENT_SPRCYCLE | FTENT_PERSIST );
+			pFlare = gEngfuncs.pEfxAPI->R_TempSprite( tr.endpos, vec3_origin_pm, 1.0, gEngfuncs.pEventAPI->EV_FindModelIndex( EGON_FLARE_SPRITE ), kRenderGlow, kRenderFxNoDissipation, 1.0, 99999, FTENT_SPRCYCLE | FTENT_PERSIST );
 		}
 	}
 

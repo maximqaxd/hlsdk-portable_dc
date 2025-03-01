@@ -389,8 +389,8 @@ void CHudSpectator::SetSpectatorStartPosition()
 	else
 	{
 		// jump to 0,0,0 if no better position was found
-		VectorCopy( vec3_origin, m_cameraOrigin );
-		VectorCopy( vec3_origin, m_cameraAngles );
+		VectorCopy( vec3_origin_pm, m_cameraOrigin );
+		VectorCopy( vec3_origin_pm, m_cameraAngles );
 	}
 
 	VectorCopy( m_cameraOrigin, vJumpOrigin );
@@ -1923,9 +1923,9 @@ void CHudSpectator::Reset()
 	if( strcmp( m_OverviewData.map, gEngfuncs.pfnGetLevelName() ) )
 	{
 		// update level overview if level changed
-		#if !XASH_DREAMCAST
+#if !XASH_DREAMCAST
 		ParseOverviewFile();
-		#endif
+#endif
 		LoadMapSprites();
 	}
 

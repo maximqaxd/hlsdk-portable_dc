@@ -1,4 +1,4 @@
-TARGET = libhl.a
+TARGET = ../libhl.a
 DEFINES = -D_KOS_ -D_SH4_ -Dstricmp=strcasecmp -Dstrnicmp=strncasecmp -D_snprintf=snprintf  -DNO_VOICEGAMEMGR 
 INCLUDES = -I. -I../common -I../engine -I../pm_shared -I../game_shared -I../public
 KOS_CFLAGS +=  $(INCLUDES) $(DEFINES) -Oz -fno-omit-frame-pointer -ffunction-sections -fno-asynchronous-unwind-tables 

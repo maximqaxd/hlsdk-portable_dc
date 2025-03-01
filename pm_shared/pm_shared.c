@@ -118,6 +118,8 @@ static char grgchTextureType[CTEXTURESMAX];
 
 int g_onladder = 0;
 
+#define vec3_origin vec3_origin_pm
+
 static void PM_InitTrace( trace_t *trace, const vec3_t end )
 {
 	memset( trace, 0, sizeof( *trace ));
@@ -2131,7 +2133,7 @@ void PM_LadderMove( physent_t *pLadder )
 		if( flSpeed > pmove->maxspeed )
 			flSpeed = pmove->maxspeed;
 
-		AngleVectors( pmove->angles, vpn, v_right, NULL );
+		AngleVectors_PM( pmove->angles, vpn, v_right, NULL );
 
 		if( pmove->flags & FL_DUCKING )
 			flSpeed *= PLAYER_DUCKING_MULTIPLIER;
@@ -2800,7 +2802,7 @@ float PM_CalcRoll( vec3_t angles, vec3_t velocity, float rollangle, float rollsp
 	float value;
 	vec3_t forward, right, up;
 
-	AngleVectors( angles, forward, right, up );
+	AngleVectors_PM( angles, forward, right, up );
 
 	side = DotProduct( velocity, right );
 
@@ -2963,7 +2965,7 @@ void PM_PlayerMove( qboolean server )
 	PM_ReduceTimers();
 
 	// Convert view angles to vectors
-	AngleVectors( pmove->angles, pmove->forward, pmove->right, pmove->up );
+	AngleVectors_PM( pmove->angles, pmove->forward, pmove->right, pmove->up );
 
 	// PM_ShowClipBox();
 
