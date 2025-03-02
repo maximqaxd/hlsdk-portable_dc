@@ -1907,7 +1907,7 @@ void EntvarsKeyvalue( entvars_t *pev, KeyValueData *pkvd )
 {
 	int i;
 	TYPEDESCRIPTION *pField;
-
+	
 	for( i = 0; i < (int)ENTVARS_COUNT; i++ )
 	{
 		pField = &gEntvarsDescription[i];
@@ -1919,14 +1919,35 @@ void EntvarsKeyvalue( entvars_t *pev, KeyValueData *pkvd )
 			case FIELD_MODELNAME:
 			case FIELD_SOUNDNAME:
 			case FIELD_STRING:
+#if XASH_DREAMCAST // unaligned access fix
+				{
+				string_t strval = ALLOC_STRING( pkvd->szValue );
+				memcpy( ( char * )pev + pField->fieldOffset, &strval, sizeof( string_t ) );
+				}
+#else			
 				( *(string_t *)( (char *)pev + pField->fieldOffset ) ) = ALLOC_STRING( pkvd->szValue );
+#endif
 				break;
 			case FIELD_TIME:
 			case FIELD_FLOAT:
+#if XASH_DREAMCAST // unaligned access fix
+				{
+				float fval = atof( pkvd->szValue );
+				memcpy( (char *)pev + pField->fieldOffset, &fval, sizeof( float ) );
+				}
+#else
 				( *(float *)( (char *)pev + pField->fieldOffset ) ) = atof( pkvd->szValue );
+#endif
 				break;
 			case FIELD_INTEGER:
+#if XASH_DREAMCAST // unaligned access fix
+				{
+				int ival = atoi( pkvd->szValue );
+				memcpy( (char *)pev + pField->fieldOffset, &ival, sizeof( int ) );
+				}
+#else				
 				( *(int *)( (char *)pev + pField->fieldOffset ) ) = atoi( pkvd->szValue );
+#endif
 				break;
 			case FIELD_POSITION_VECTOR:
 			case FIELD_VECTOR:
@@ -2114,13 +2135,20 @@ void CSave::BufferData( const char *pdata, int size )
 //
 // --------------------------------------------------------------
 int CRestore::ReadField( void *pBaseData, TYPEDESCRIPTION *pFields, int fieldCount, int startField, int size, char *pName, void *pData )
-{
+{	
 	int i, j, stringCount, fieldNumber, entityIndex;
 	TYPEDESCRIPTION *pTest;
 	float time, timeData;
 	Vector position;
 	edict_t	*pent;
 	char *pString;
+#if XASH_DREAMCAST // unaligned access fix
+	CBaseEntity	*cBaseEnt;
+	entvars_t	*entVars;
+	EOFFSET		eOffSet;
+	EHANDLE     eHandle;
+	void		*funcCb;
+#endif
 
 	time = 0;
 	position = Vector( 0, 0, 0 );
@@ -2137,28 +2165,27 @@ int CRestore::ReadField( void *pBaseData, TYPEDESCRIPTION *pFields, int fieldCou
 		fieldNumber = ( i + startField ) % fieldCount;
 		pTest = &pFields[fieldNumber];
 		if( !stricmp( pTest->fieldName, pName ) )
-		{
+		{			
 			if( !m_global || !(pTest->flags & FTYPEDESC_GLOBAL ) )
 			{
 				for( j = 0; j < pTest->fieldSize; j++ )
 				{
 					void *pOutputData = ( (char *)pBaseData + pTest->fieldOffset + ( j * gSizes[pTest->fieldType] ) );
 					void *pInputData = (char *)pData + j * gInputSizes[pTest->fieldType];
-
 					switch( pTest->fieldType )
 					{
 					case FIELD_TIME:
-					#if __VFP_FP__
+#if __VFP_FP__  || XASH_DREAMCAST // unaligned access fix
 						memcpy( &timeData, pInputData, 4 );
 						// Re-base time variables
 						timeData += time;
 						memcpy( pOutputData, &timeData, 4 );
-					#else
+#else
 						timeData = *(float *)pInputData;
 						// Re-base time variables
 						timeData += time;
 						*( (float *)pOutputData ) = timeData;
-					#endif
+#endif
 						break;
 					case FIELD_FLOAT:
 						memcpy( pOutputData, pInputData, 4 );
@@ -2166,6 +2193,37 @@ int CRestore::ReadField( void *pBaseData, TYPEDESCRIPTION *pFields, int fieldCou
 					case FIELD_MODELNAME:
 					case FIELD_SOUNDNAME:
 					case FIELD_STRING:
+#if XASH_DREAMCAST // unaligned access fix
+						// Skip over j strings
+						pString = (char *)pData;
+						for( stringCount = 0; stringCount < j; stringCount++ )
+						{
+							while( *pString )
+								pString++;
+							pString++;
+						}
+						pInputData = pString;						
+						if( ( (char *)pInputData )[0] == '\0' )
+						{
+							memset( pOutputData, 0, sizeof( string_t ) );
+						}
+						else
+						{
+							string_t string;
+
+							string = ALLOC_STRING( (char *)pInputData );
+
+							memcpy( pOutputData, &string, sizeof( string_t ) );
+							
+							if( !FStringNull( string ) && m_precache )
+							{
+								if( pTest->fieldType == FIELD_MODELNAME )
+									PRECACHE_MODEL( STRING( string ) );
+								else if( pTest->fieldType == FIELD_SOUNDNAME )
+									PRECACHE_SOUND( STRING( string ) );
+							}
+						}					
+#else
 						// Skip over j strings
 						pString = (char *)pData;
 						for( stringCount = 0; stringCount < j; stringCount++ )
@@ -2176,7 +2234,9 @@ int CRestore::ReadField( void *pBaseData, TYPEDESCRIPTION *pFields, int fieldCou
 						}
 						pInputData = pString;
 						if( ( (char *)pInputData )[0] == '\0' )
+						{
 							*( (string_t *)pOutputData ) = 0;
+						}
 						else
 						{
 							string_t string;
@@ -2193,87 +2253,160 @@ int CRestore::ReadField( void *pBaseData, TYPEDESCRIPTION *pFields, int fieldCou
 									PRECACHE_SOUND( STRING( string ) );
 							}
 						}
+#endif
 						break;
 					case FIELD_EVARS:
+#if XASH_DREAMCAST // unaligned access fix
+						memcpy( &entityIndex, pInputData, 4 );
+						pent = EntityFromIndex( entityIndex );
+						if( pent )
+							entVars = VARS( pent );
+						else
+							entVars = NULL;
+						memcpy( pOutputData, &entVars,  sizeof( entvars_t * ) );
+#else
 						entityIndex = *( int *)pInputData;
 						pent = EntityFromIndex( entityIndex );
 						if( pent )
 							*( (entvars_t **)pOutputData ) = VARS( pent );
 						else
 							*( (entvars_t **)pOutputData ) = NULL;
+#endif
 						break;
 					case FIELD_CLASSPTR:
+#if XASH_DREAMCAST // unaligned access fix
+						memcpy( &entityIndex, pInputData, 4 );
+						pent = EntityFromIndex( entityIndex );
+						if( pent )
+							cBaseEnt = CBaseEntity::Instance( pent );
+						else
+							cBaseEnt = NULL;
+						memcpy(pOutputData, &cBaseEnt,  sizeof( CBaseEntity * ));
+#else
 						entityIndex = *( int *)pInputData;
 						pent = EntityFromIndex( entityIndex );
 						if( pent )
 							*( (CBaseEntity **)pOutputData ) = CBaseEntity::Instance( pent );
 						else
 							*( (CBaseEntity **)pOutputData ) = NULL;
+#endif
 						break;
 					case FIELD_EDICT:
+#if XASH_DREAMCAST // unaligned access fix
+						memcpy( &entityIndex, pInputData, 4 );
+						pent = EntityFromIndex( entityIndex );
+						memcpy(pOutputData, &pent,  sizeof( edict_t * ));
+#else
 						entityIndex = *(int *)pInputData;
 						pent = EntityFromIndex( entityIndex );
 						*( (edict_t **)pOutputData ) = pent;
+#endif
 						break;
 					case FIELD_EHANDLE:
 						// Input and Output sizes are different!
-						pInputData = (char*)pData + j * gInputSizes[pTest->fieldType];
+#if XASH_DREAMCAST // unaligned access fix
+						pOutputData = (char *)pOutputData + j * ( sizeof(EHANDLE) - gSizes[pTest->fieldType] );			
+						memcpy( &entityIndex, pInputData, 4 );
+						pent = EntityFromIndex( entityIndex );
+						if( pent )
+							eHandle = CBaseEntity::Instance( pent );
+						else
+							eHandle = NULL;
+						memcpy( pOutputData, &eHandle,  sizeof( EHANDLE ) );					
+#else
+						pOutputData = (char *)pOutputData + j * ( sizeof(EHANDLE) - gSizes[pTest->fieldType] );
 						entityIndex = *(int *)pInputData;
 						pent = EntityFromIndex( entityIndex );
 						if( pent )
 							*( (EHANDLE *)pOutputData ) = CBaseEntity::Instance( pent );
 						else
 							*( (EHANDLE *)pOutputData ) = NULL;
+#endif
 						break;
 					case FIELD_ENTITY:
+#if XASH_DREAMCAST // unaligned access fix
+						memcpy( &entityIndex, pInputData, 4 );
+						pent = EntityFromIndex( entityIndex );
+						if( pent )
+							eOffSet = OFFSET( pent );
+						else
+							eOffSet = 0;
+						memcpy( pOutputData, &eOffSet,  sizeof( EOFFSET ) );
+#else
 						entityIndex = *(int *)pInputData;
 						pent = EntityFromIndex( entityIndex );
 						if( pent )
 							*( (EOFFSET *)pOutputData ) = OFFSET( pent );
 						else
-							*( (EOFFSET *)pOutputData ) = 0;
+							*( (EOFFSET *)pOutputData ) = 0;						
+#endif
 						break;
 					case FIELD_VECTOR:
-						#if __VFP_FP__
+#if __VFP_FP__ || XASH_DREAMCAST // unaligned access fix
 						memcpy( pOutputData, pInputData, sizeof( Vector ) );
-						#else
+#else
 						( (float *)pOutputData )[0] = ( (float *)pInputData )[0];
 						( (float *)pOutputData )[1] = ( (float *)pInputData )[1];
 						( (float *)pOutputData )[2] = ( (float *)pInputData )[2];
-						#endif
+#endif
 						break;
 					case FIELD_POSITION_VECTOR:
-						#if  __VFP_FP__
+#if __VFP_FP__ || XASH_DREAMCAST // unaligned access fix
 						{
 							Vector tmp;
 							memcpy( &tmp, pInputData, sizeof( Vector ) );
 							tmp = tmp + position;
 							memcpy( pOutputData, &tmp, sizeof( Vector ) );
 						}
-						#else
+#else
 						( (float *)pOutputData )[0] = ( (float *)pInputData )[0] + position.x;
 						( (float *)pOutputData )[1] = ( (float *)pInputData )[1] + position.y;
 						( (float *)pOutputData )[2] = ( (float *)pInputData )[2] + position.z;
-						#endif
+#endif
 						break;
 					case FIELD_BOOLEAN:
 					case FIELD_INTEGER:
+#if XASH_DREAMCAST // unaligned access fix
+						memcpy( pOutputData, pInputData, sizeof( int ) );
+#else						
 						*( (int *)pOutputData ) = *(int *)pInputData;
+#endif
 						break;
 					case FIELD_SHORT:
+#if XASH_DREAMCAST // unaligned access fix
+						memcpy( pOutputData, pInputData, sizeof( short ) );
+#else
 						*( (short *)pOutputData ) = *(short *)pInputData;
+#endif
 						break;
 					case FIELD_CHARACTER:
+#if XASH_DREAMCAST // unaligned access fix
+						memcpy( pOutputData, pInputData, sizeof( char ) );
+#else
 						*( (char *)pOutputData ) = *(char *)pInputData;
+#endif
 						break;
 					case FIELD_POINTER:
+#if XASH_DREAMCAST // unaligned access fix
+						memcpy( pOutputData, pInputData, sizeof( void * ) );
+#else
 						*( (void**)pOutputData ) = *(void **)pInputData;
+#endif	
 						break;
 					case FIELD_FUNCTION:
+#if XASH_DREAMCAST // unaligned access fix
+						if( ( (char *)pInputData )[0] == '\0' )
+							funcCb = 0;
+						else
+							funcCb = (void*)FUNCTION_FROM_NAME( (char *)pInputData );
+						memcpy( pOutputData, &funcCb, sizeof( void * )  );
+						
+#else
 						if( ( (char *)pInputData )[0] == '\0' )
 							*( (void**)pOutputData ) = 0;
 						else
 							*( (void**)pOutputData ) = (void*)FUNCTION_FROM_NAME( (char *)pInputData );
+#endif
 						break;
 					default:
 						ALERT( at_error, "Bad field type\n" );
