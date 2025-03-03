@@ -619,9 +619,9 @@ void CStudioModelRenderer::StudioCalcRotations( float pos[][3], vec4_t *q, mstud
 
 	// add in programtic controllers
 	pbone = (mstudiobone_t *)( (byte *)m_pStudioHeader + m_pStudioHeader->boneindex );
-
+#if !XASH_DREAMCAST
 	StudioCalcBoneAdj( dadt, adj, m_pCurrentEntity->curstate.controller, m_pCurrentEntity->latched.prevcontroller, m_pCurrentEntity->mouth.mouthopen );
-
+#endif // disabled for latching mouths since we are speachless because of stripped VOX, restore later that
 	for( i = 0; i < m_pStudioHeader->numbones; i++, pbone++, panim++ )
 	{
 		StudioCalcBoneQuaterion( frame, s, pbone, panim, adj, q[i] );
@@ -1643,12 +1643,13 @@ void CStudioModelRenderer::StudioRenderFinal_Hardware( void )
 		{
 			IEngineStudio.StudioSetupModel( i, (void **)&m_pBodyPart, (void **)&m_pSubModel );
 
+#if !XASH_DREAMCAST
 			if( m_fDoInterp )
 			{
 				// interpolation messes up bounding boxes.
 				m_pCurrentEntity->trivial_accept = 0; 
 			}
-
+#endif
 			IEngineStudio.GL_SetRenderMode( rendermode );
 			IEngineStudio.StudioDrawPoints();
 			IEngineStudio.GL_StudioDrawShadow();

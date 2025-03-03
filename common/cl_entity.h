@@ -16,6 +16,7 @@
 #if !defined(CL_ENTITY_H)
 #define CL_ENTITY_H
 
+#if !XASH_DREAMCAST
 typedef struct efrag_s
 {
 	struct mleaf_s	*leaf;
@@ -30,10 +31,10 @@ typedef struct
 	byte		sndcount;		// counter for running average
 	int		sndavg;		// running average
 } mouth_t;
-
+#endif
 typedef struct
 {
-	float		prevanimtime;  
+	float		prevanimtime;
 	float		sequencetime;
 	byte		prevseqblending[2];
 	vec3_t		prevorigin;
@@ -57,7 +58,11 @@ typedef struct
 
 typedef struct cl_entity_s cl_entity_t;
 
+#if XASH_DREAMCAST
+#define HISTORY_MAX		4		// Must be power of 2
+#else
 #define HISTORY_MAX		64		// Must be power of 2
+#endif
 #define HISTORY_MASK	( HISTORY_MAX - 1 )
 
 #include "entity_state.h"
@@ -75,7 +80,9 @@ struct cl_entity_s
 	int		current_position;	// Last received history update index
 	position_history_t	ph[HISTORY_MAX];	// History of position and angle updates for this player
 
+#if !XASH_DREAMCAST
 	mouth_t		mouth;		// For synchronizing mouth movements.
+#endif // restore when we restore NPC's speaking XASH_DREAMCAST
 
 	latchedvars_t	latched;		// Variables used by studio model rendering routines
 
@@ -91,15 +98,20 @@ struct cl_entity_s
 	vec3_t		attachment[4];
 
 	// Other entity local information
+#if !XASH_DREAMCAST
 	int		trivial_accept;
-
+#endif
 	struct model_s	*model;	// cl.model_precache[ curstate.modelindes ];  all visible entities have a model
+#if !XASH_DREAMCAST
 	struct efrag_s	*efrag;	// linked list of efrags
 	struct mnode_s	*topnode;	// for bmodels, first world node that splits bmodel, or NULL if not split
-
 	float		syncbase;	// for client-side animations -- used by obsolete alias animation system, remove?
+#endif
 	int		visframe;	// last frame this entity was found in an active leaf
+
+#if !XASH_DREAMCAST
 	colorVec		cvFloorColor;
+#endif
 };
 
 #endif//CL_ENTITY_H
