@@ -2,7 +2,7 @@ TARGET = ../libcl_dll.a
 DEFINES = -D_KOS_ -D_SH4_ -DCLIENT_DLL -Dstricmp=strcasecmp -Dstrnicmp=strncasecmp -D_snprintf=snprintf  -DNO_VOICEGAMEMGR 
 INCLUDES = -I. -I../common -I../engine -I../pm_shared -I../game_shared -I../public -I../external -I../dlls -I../utils/fake_vgui/include
 KOS_CFLAGS +=  $(INCLUDES) $(DEFINES) -Os -fomit-frame-pointer -ffunction-sections -fno-asynchronous-unwind-tables
-KOS_CPPFLAGS += $(INCLUDES) $(DEFINES) -fno-exceptions -std=gnu++11 -fpermissive -MMD -MP  $(CFLAGS)
+KOS_CPPFLAGS += $(INCLUDES) $(DEFINES) -fno-exceptions -std=gnu++11 -fpermissive -MMD -MP -Wno-reorder $(CFLAGS)
 OBJS = \
 	ev_hldm.o \
 	hl/hl_events.o \
