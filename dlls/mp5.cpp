@@ -49,6 +49,9 @@ void CMP5::Spawn()
 {
 	pev->classname = MAKE_STRING( "weapon_9mmAR" ); // hack to allow for old names
 	Precache();
+#if XASH_DREAMCAST
+    PRECACHE_MODEL( "models/w_9mmAR.mdl" );
+#endif
 	SET_MODEL( ENT( pev ), "models/w_9mmAR.mdl" );
 	m_iId = WEAPON_MP5;
 
@@ -64,6 +67,27 @@ void CMP5::Spawn()
 	FallInit();// get ready to fall down.
 }
 
+#if XASH_DREAMCAST
+void CMP5::Precache( void )
+{
+    PRECACHE_SOUND( "items/9mmclip1.wav" );
+
+    PRECACHE_SOUND( "items/clipinsert1.wav" );
+    PRECACHE_SOUND( "items/cliprelease1.wav" );
+
+    PRECACHE_SOUND( "weapons/hks1.wav" ); // H to the K
+    PRECACHE_SOUND( "weapons/hks2.wav" ); // H to the K
+    PRECACHE_SOUND( "weapons/hks3.wav" ); // H to the K
+
+    PRECACHE_SOUND( "weapons/glauncher.wav" );
+    PRECACHE_SOUND( "weapons/glauncher2.wav" );
+
+    PRECACHE_SOUND( "weapons/357_cock1.wav" );
+
+    m_usMP5 = PRECACHE_EVENT( 1, "events/mp5.sc" );
+    m_usMP52 = PRECACHE_EVENT( 1, "events/mp52.sc" );
+}
+#else
 void CMP5::Precache( void )
 {
 	PRECACHE_MODEL( "models/v_9mmAR.mdl" );
@@ -92,7 +116,7 @@ void CMP5::Precache( void )
 	m_usMP5 = PRECACHE_EVENT( 1, "events/mp5.sc" );
 	m_usMP52 = PRECACHE_EVENT( 1, "events/mp52.sc" );
 }
-
+#endif
 int CMP5::GetItemInfo( ItemInfo *p )
 {
 	p->pszName = STRING( pev->classname );
@@ -124,6 +148,11 @@ int CMP5::AddToPlayer( CBasePlayer *pPlayer )
 
 BOOL CMP5::Deploy()
 {
+#if XASH_DREAMCAST
+    PRECACHE_MODEL( "models/v_9mmAR.mdl" );
+    PRECACHE_MODEL( "models/p_9mmAR.mdl" );
+    m_iShell = PRECACHE_MODEL( "models/shell.mdl" );
+#endif
 	return DefaultDeploy( "models/v_9mmAR.mdl", "models/p_9mmAR.mdl", MP5_DEPLOY, "mp5" );
 }
 

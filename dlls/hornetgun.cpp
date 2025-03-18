@@ -49,6 +49,9 @@ BOOL CHgun::IsUseable( void )
 
 void CHgun::Spawn()
 {
+#if XASH_DREAMCAST
+	PRECACHE_MODEL( "models/v_hgun.mdl" );
+#endif
 	Precache();
 	m_iId = WEAPON_HORNETGUN;
 	SET_MODEL( ENT( pev ), "models/w_hgun.mdl" );
@@ -61,10 +64,11 @@ void CHgun::Spawn()
 
 void CHgun::Precache( void )
 {
+#if !XASH_DREAMCAST
 	PRECACHE_MODEL( "models/v_hgun.mdl" );
 	PRECACHE_MODEL( "models/w_hgun.mdl" );
 	PRECACHE_MODEL( "models/p_hgun.mdl" );
-
+#endif
 	m_usHornetFire = PRECACHE_EVENT( 1, "events/firehornet.sc" );
 
 	UTIL_PrecacheOther( "hornet" );
@@ -108,6 +112,10 @@ int CHgun::GetItemInfo( ItemInfo *p )
 
 BOOL CHgun::Deploy()
 {
+#if XASH_DREAMCAST
+	PRECACHE_MODEL( "models/w_hgun.mdl" );
+	PRECACHE_MODEL( "models/p_hgun.mdl" );
+#endif
 	return DefaultDeploy( "models/v_hgun.mdl", "models/p_hgun.mdl", HGUN_UP, "hive" );
 }
 

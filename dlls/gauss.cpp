@@ -65,6 +65,9 @@ extern int g_irunninggausspred;
 void CGauss::Spawn()
 {
 	Precache();
+#if XASH_DREAMCAST
+	PRECACHE_MODEL( "models/w_gauss.mdl" );
+#endif
 	m_iId = WEAPON_GAUSS;
 	SET_MODEL( ENT( pev ), "models/w_gauss.mdl" );
 
@@ -75,10 +78,11 @@ void CGauss::Spawn()
 
 void CGauss::Precache( void )
 {
+#if !XASH_DREAMCAST
 	PRECACHE_MODEL( "models/w_gauss.mdl" );
 	PRECACHE_MODEL( "models/v_gauss.mdl" );
 	PRECACHE_MODEL( "models/p_gauss.mdl" );
-
+#endif
 	PRECACHE_SOUND( "items/9mmclip1.wav" );
 
 	PRECACHE_SOUND( "weapons/gauss2.wav" );
@@ -126,6 +130,10 @@ int CGauss::GetItemInfo( ItemInfo *p )
 
 BOOL CGauss::Deploy()
 {
+#if XASH_DREAMCAST 
+    PRECACHE_MODEL( "models/v_gauss.mdl" );
+	PRECACHE_MODEL( "models/p_gauss.mdl" );
+#endif
 	m_pPlayer->m_flPlayAftershock = 0.0;
 	return DefaultDeploy( "models/v_gauss.mdl", "models/p_gauss.mdl", GAUSS_DRAW, "gauss" );
 }

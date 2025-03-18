@@ -350,6 +350,9 @@ void CRpg::Reload( void )
 void CRpg::Spawn()
 {
 	Precache();
+#if XASH_DREAMCAST
+    PRECACHE_MODEL( "models/w_rpg.mdl" );
+#endif
 	m_iId = WEAPON_RPG;
 
 	SET_MODEL( ENT( pev ), "models/w_rpg.mdl" );
@@ -374,10 +377,11 @@ void CRpg::Spawn()
 
 void CRpg::Precache( void )
 {
+#if !XASH_DREAMCAST
 	PRECACHE_MODEL( "models/w_rpg.mdl" );
 	PRECACHE_MODEL( "models/v_rpg.mdl" );
 	PRECACHE_MODEL( "models/p_rpg.mdl" );
-
+#endif
 	PRECACHE_SOUND( "items/9mmclip1.wav" );
 
 	UTIL_PrecacheOther( "laser_spot" );
@@ -420,6 +424,10 @@ int CRpg::AddToPlayer( CBasePlayer *pPlayer )
 
 BOOL CRpg::Deploy()
 {
+#if XASH_DREAMCAST
+	PRECACHE_MODEL( "models/v_rpg.mdl" );
+	PRECACHE_MODEL( "models/p_rpg.mdl" );
+#endif
 	if( m_iClip == 0 )
 	{
 		return DefaultDeploy( "models/v_rpg.mdl", "models/p_rpg.mdl", RPG_DRAW_UL, "rpg" );

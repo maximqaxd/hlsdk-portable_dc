@@ -70,6 +70,9 @@ void CPython::Spawn()
 {
 	pev->classname = MAKE_STRING( "weapon_357" ); // hack to allow for old names
 	Precache();
+#if XASH_DREAMCAST
+    PRECACHE_MODEL( "models/w_357.mdl" );
+#endif
 	m_iId = WEAPON_PYTHON;
 	SET_MODEL( ENT( pev ), "models/w_357.mdl" );
 
@@ -80,11 +83,13 @@ void CPython::Spawn()
 
 void CPython::Precache( void )
 {
+#if !XASH_DREAMCAST
 	PRECACHE_MODEL( "models/v_357.mdl" );
 	PRECACHE_MODEL( "models/w_357.mdl" );
 	PRECACHE_MODEL( "models/p_357.mdl" );
 
 	PRECACHE_MODEL( "models/w_357ammobox.mdl" );
+#endif
 	PRECACHE_SOUND( "items/9mmclip1.wav" );
 
 	PRECACHE_SOUND( "weapons/357_reload1.wav" );
@@ -97,6 +102,10 @@ void CPython::Precache( void )
 
 BOOL CPython::Deploy()
 {
+#if XASH_DREAMCAST
+    PRECACHE_MODEL( "models/v_357.mdl" );
+    PRECACHE_MODEL( "models/p_357.mdl" );
+#endif
 #if CLIENT_DLL
 	if( bIsMultiplayer() )
 #else

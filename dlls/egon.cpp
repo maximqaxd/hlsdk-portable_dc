@@ -54,6 +54,9 @@ LINK_ENTITY_TO_CLASS( weapon_egon, CEgon )
 void CEgon::Spawn()
 {
 	Precache();
+#if XASH_DREAMCAST
+	PRECACHE_MODEL( "models/w_egon.mdl" );
+#endif
 	m_iId = WEAPON_EGON;
 	SET_MODEL( ENT( pev ), "models/w_egon.mdl" );
 
@@ -64,10 +67,11 @@ void CEgon::Spawn()
 
 void CEgon::Precache( void )
 {
+#if !XASH_DREAMCAST
 	PRECACHE_MODEL( "models/w_egon.mdl" );
 	PRECACHE_MODEL( "models/v_egon.mdl" );
 	PRECACHE_MODEL( "models/p_egon.mdl" );
-
+#endif
 	PRECACHE_MODEL( "models/w_9mmclip.mdl" );
 	PRECACHE_SOUND( "items/9mmclip1.wav" );
 
@@ -86,6 +90,10 @@ void CEgon::Precache( void )
 
 BOOL CEgon::Deploy( void )
 {
+#if XASH_DREAMCAST
+	PRECACHE_MODEL( "models/v_egon.mdl" );
+	PRECACHE_MODEL( "models/p_egon.mdl" );
+#endif
 	m_deployed = FALSE;
 	m_fireState = FIRE_OFF;
 	return DefaultDeploy( "models/v_egon.mdl", "models/p_egon.mdl", EGON_DRAW, "egon" );

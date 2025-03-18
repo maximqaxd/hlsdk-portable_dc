@@ -260,6 +260,9 @@ LINK_ENTITY_TO_CLASS( weapon_crossbow, CCrossbow )
 void CCrossbow::Spawn()
 {
 	Precache();
+#if XASH_DREAMCAST
+	PRECACHE_MODEL( "models/w_crossbow.mdl" );
+#endif
 	m_iId = WEAPON_CROSSBOW;
 	SET_MODEL( ENT( pev ), "models/w_crossbow.mdl" );
 
@@ -282,10 +285,11 @@ int CCrossbow::AddToPlayer( CBasePlayer *pPlayer )
 
 void CCrossbow::Precache( void )
 {
+#if !XASH_DREAMCAST
 	PRECACHE_MODEL( "models/w_crossbow.mdl" );
 	PRECACHE_MODEL( "models/v_crossbow.mdl" );
 	PRECACHE_MODEL( "models/p_crossbow.mdl" );
-
+#endif
 	PRECACHE_SOUND( "weapons/xbow_fire1.wav" );
 	PRECACHE_SOUND( "weapons/xbow_reload1.wav" );
 
@@ -313,6 +317,11 @@ int CCrossbow::GetItemInfo( ItemInfo *p )
 
 BOOL CCrossbow::Deploy()
 {
+#if XASH_DREAMCAST
+
+    PRECACHE_MODEL( "models/v_crossbow.mdl" );
+	PRECACHE_MODEL( "models/p_crossbow.mdl" );
+#endif
 	if( m_iClip )
 		return DefaultDeploy( "models/v_crossbow.mdl", "models/p_crossbow.mdl", CROSSBOW_DRAW1, "bow" );
 	return DefaultDeploy( "models/v_crossbow.mdl", "models/p_crossbow.mdl", CROSSBOW_DRAW2, "bow" );

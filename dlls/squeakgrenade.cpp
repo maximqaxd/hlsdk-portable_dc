@@ -412,6 +412,9 @@ LINK_ENTITY_TO_CLASS( weapon_snark, CSqueak )
 
 void CSqueak::Spawn()
 {
+#if !XASH_DREAMCAST
+	PRECACHE_MODEL( "models/w_sqknest.mdl" );
+#endif
 	Precache();
 	m_iId = WEAPON_SNARK;
 	SET_MODEL( ENT( pev ), "models/w_sqknest.mdl" );
@@ -427,9 +430,11 @@ void CSqueak::Spawn()
 
 void CSqueak::Precache( void )
 {
+#if !XASH_DREAMCAST
 	PRECACHE_MODEL( "models/w_sqknest.mdl" );
 	PRECACHE_MODEL( "models/v_squeak.mdl" );
 	PRECACHE_MODEL( "models/p_squeak.mdl" );
+#endif
 	PRECACHE_SOUND( "squeek/sqk_hunt2.wav" );
 	PRECACHE_SOUND( "squeek/sqk_hunt3.wav" );
 	UTIL_PrecacheOther( "monster_snark" );
@@ -456,6 +461,10 @@ int CSqueak::GetItemInfo( ItemInfo *p )
 
 BOOL CSqueak::Deploy()
 {
+#if XASH_DREAMCAST
+	PRECACHE_MODEL( "models/v_squeak.mdl" );
+	PRECACHE_MODEL( "models/p_squeak.mdl" );
+#endif
 	// play hunt sound
 	float flRndSound = RANDOM_FLOAT( 0.0f, 1.0f );
 

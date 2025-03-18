@@ -39,6 +39,9 @@ LINK_ENTITY_TO_CLASS( weapon_handgrenade, CHandGrenade )
 
 void CHandGrenade::Spawn()
 {
+#if XASH_DREAMCAST
+	PRECACHE_MODEL( "models/w_grenade.mdl" );
+#endif
 	Precache();
 	m_iId = WEAPON_HANDGRENADE;
 	SET_MODEL( ENT( pev ), "models/w_grenade.mdl" );
@@ -53,9 +56,11 @@ void CHandGrenade::Spawn()
 
 void CHandGrenade::Precache( void )
 {
+#if !XASH_DREAMCAST
 	PRECACHE_MODEL( "models/w_grenade.mdl" );
 	PRECACHE_MODEL( "models/v_grenade.mdl" );
 	PRECACHE_MODEL( "models/p_grenade.mdl" );
+#endif
 }
 
 int CHandGrenade::GetItemInfo( ItemInfo *p )
@@ -77,6 +82,10 @@ int CHandGrenade::GetItemInfo( ItemInfo *p )
 
 BOOL CHandGrenade::Deploy()
 {
+#if XASH_DREAMCAST
+	PRECACHE_MODEL( "models/v_grenade.mdl" );
+	PRECACHE_MODEL( "models/p_grenade.mdl" );
+#endif
 	m_flReleaseThrow = -1;
 	return DefaultDeploy( "models/v_grenade.mdl", "models/p_grenade.mdl", HANDGRENADE_DRAW, "crowbar" );
 }

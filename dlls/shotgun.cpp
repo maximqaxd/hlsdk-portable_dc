@@ -55,7 +55,9 @@ void CShotgun::Spawn()
 
 void CShotgun::Precache( void )
 {
+#if !XASH_DREAMCAST
 	PRECACHE_MODEL( "models/v_shotgun.mdl" );
+#endif
 	PRECACHE_MODEL( "models/w_shotgun.mdl" );
 	PRECACHE_MODEL( "models/p_shotgun.mdl" );
 
@@ -110,6 +112,10 @@ int CShotgun::GetItemInfo( ItemInfo *p )
 
 BOOL CShotgun::Deploy()
 {
+#if XASH_DREAMCAST
+    // Defer view model to save memory until equipped
+    PRECACHE_MODEL("models/v_shotgun.mdl");
+#endif
 	return DefaultDeploy( "models/v_shotgun.mdl", "models/p_shotgun.mdl", SHOTGUN_DRAW, "shotgun" );
 }
 

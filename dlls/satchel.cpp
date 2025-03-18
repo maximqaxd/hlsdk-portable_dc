@@ -247,6 +247,10 @@ int CSatchel::AddToPlayer( CBasePlayer *pPlayer )
 void CSatchel::Spawn()
 {
 	Precache();
+    
+#if XASH_DREAMCAST
+    PRECACHE_MODEL("models/w_satchel.mdl");
+#endif
 	m_iId = WEAPON_SATCHEL;
 	SET_MODEL( ENT( pev ), "models/w_satchel.mdl" );
 
@@ -257,12 +261,13 @@ void CSatchel::Spawn()
 
 void CSatchel::Precache( void )
 {
+#if !XASH_DREAMCAST
 	PRECACHE_MODEL( "models/v_satchel.mdl" );
 	PRECACHE_MODEL( "models/v_satchel_radio.mdl" );
 	PRECACHE_MODEL( "models/w_satchel.mdl" );
 	PRECACHE_MODEL( "models/p_satchel.mdl" );
 	PRECACHE_MODEL( "models/p_satchel_radio.mdl" );
-
+#endif
 	UTIL_PrecacheOther( "monster_satchel" );
 }
 
@@ -309,6 +314,12 @@ BOOL CSatchel::CanDeploy( void )
 
 BOOL CSatchel::Deploy()
 {
+#if XASH_DREAMCAST
+    PRECACHE_MODEL("models/v_satchel.mdl");
+    PRECACHE_MODEL("models/v_satchel_radio.mdl");
+    PRECACHE_MODEL("models/p_satchel.mdl");
+    PRECACHE_MODEL("models/p_satchel_radio.mdl");
+#endif
 	m_pPlayer->m_flNextAttack = UTIL_WeaponTimeBase() + 1.0f;
 	BOOL result;
 

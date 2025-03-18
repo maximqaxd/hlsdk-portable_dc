@@ -42,6 +42,9 @@ void CGlock::Spawn()
 {
 	pev->classname = MAKE_STRING( "weapon_9mmhandgun" ); // hack to allow for old names
 	Precache();
+#if XASH_DREAMCAST
+    PRECACHE_MODEL( "models/w_9mmhandgun.mdl" );
+#endif
 	m_iId = WEAPON_GLOCK;
 	SET_MODEL( ENT( pev ), "models/w_9mmhandgun.mdl" );
 
@@ -52,11 +55,13 @@ void CGlock::Spawn()
 
 void CGlock::Precache( void )
 {
+#if !XASH_DREAMCAST
 	PRECACHE_MODEL( "models/v_9mmhandgun.mdl" );
 	PRECACHE_MODEL( "models/w_9mmhandgun.mdl" );
 	PRECACHE_MODEL( "models/p_9mmhandgun.mdl" );
 
 	m_iShell = PRECACHE_MODEL( "models/shell.mdl" );// brass shell
+#endif
 
 	PRECACHE_SOUND( "items/9mmclip1.wav" );
 	PRECACHE_SOUND( "items/9mmclip2.wav" );
@@ -100,6 +105,11 @@ int CGlock::AddToPlayer( CBasePlayer *pPlayer )
 
 BOOL CGlock::Deploy()
 {
+#if XASH_DREAMCAST
+    PRECACHE_MODEL( "models/v_9mmhandgun.mdl" );
+    PRECACHE_MODEL( "models/p_9mmhandgun.mdl" );
+    m_iShell = PRECACHE_MODEL( "models/shell.mdl" ); // brass shell for ejection
+#endif
 	// pev->body = 1;
 	return DefaultDeploy( "models/v_9mmhandgun.mdl", "models/p_9mmhandgun.mdl", GLOCK_DRAW, "onehanded", /*UseDecrement() ? 1 : 0*/ 0 );
 }
